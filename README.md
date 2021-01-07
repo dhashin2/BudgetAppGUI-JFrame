@@ -16,7 +16,8 @@ Right click that and press connect
 
 After connecting, Right click Tables under APPUSER Schema and click Execute Command
 
-In the command window run these commands: (Ctrl + Shift + E to run commands)
+In the command window copy paste and run these commands: (Ctrl + Shift + E to run commands)
+(View this readme as raw for quality of life)
 
 CREATE TABLE TRANSACTIONS (
 	TransactionID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY(START WITH 1, INCREMENT BY 1),
