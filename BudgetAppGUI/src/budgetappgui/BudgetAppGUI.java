@@ -9,9 +9,9 @@ import java.util.logging.Logger;
 
 public class BudgetAppGUI {
 
-    static final String DB_URL = "jdbc:derby://localhost:1527/TestDB";
-    static final String DB_USER = "dhashin";
-    static final String DB_PASSWD = "dhashin";
+    static final String DB_URL = "jdbc:derby://localhost:1527/BudgetAppDB";
+    static final String DB_USER = "appuser";
+    static final String DB_PASSWD = "appuser";
     private static DBBean db = new DBBean();
     private static ResultSet resultSet;
    
@@ -33,5 +33,6 @@ public class BudgetAppGUI {
         login.pack();
         login.setLocationRelativeTo(null);
         login.setVisible(true);          
-    } 
+    }
+
 }

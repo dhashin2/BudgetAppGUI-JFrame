@@ -17,23 +17,21 @@ public class UserView extends javax.swing.JFrame {
     public UserView() {
         initComponents();
         
-        try {
-            setBalance();
-            setMonthlyIncome();
-            setMonthlyExpense();
-            setMonthlyBalance();
-        } catch (SQLException ex) {
-            Logger.getLogger(UserView.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        setBalance();
+        setMonthlyIncome();
+        setMonthlyExpense();
+        setMonthlyBalance();
     }
     
     //TO DISPLAY THE TOTAL BALANCE IN A USER'S ACCOUNT IN THEIR USER HOME PAGE
-    public void setBalance() throws SQLException{
+    public void setBalance(){
         LoginFrame lg = new LoginFrame();
         String Username = lg.getUsername();
         Connection con = null;
         String iQuery = "SELECT SUM(AMOUNT) FROM TRANSACTIONS WHERE USERNAME = ('"+Username+"') AND TYPE = ('Income')";
         String eQuery = "SELECT SUM(AMOUNT) FROM TRANSACTIONS WHERE USERNAME = ('"+Username+"') AND TYPE = ('Expense')";
+        String checkQuery = "SELECT * FROM TRANSACTIONS WHERE USERNAME = ('"+Username+"') AND TYPE = ('Income')";
+        String checkQuery2 = "SELECT * FROM TRANSACTIONS WHERE USERNAME = ('"+Username+"') AND TYPE = ('Expense')";
         
         try {
             con = DriverManager.getConnection(DB_URL,DB_USER,DB_PASSWD);
@@ -42,21 +40,45 @@ public class UserView extends javax.swing.JFrame {
             Logger.getLogger(LoginFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         try{
-        resultSet = db.doQuery(iQuery, con);
-        resultSet.next();
-        String sumOfIncome = resultSet.getString("1");
-        resultSet.close();
-        resultSet = db.doQuery(eQuery, con);
-        resultSet.next();
-        String sumOfExpense = resultSet.getString("1");
-        resultSet.close();
-        double income = Double.parseDouble(sumOfIncome);
-        double expense = Double.parseDouble(sumOfExpense);
-        double total = (income - expense);
-        double roundOff = Math.round(total * 100.0) / 100.0;
-        String totalString = Double.toString(roundOff);
-        jTextField1.setText(totalString);
-        jTextField1.setEditable(false);
+            
+        resultSet = db.doQuery(checkQuery, con);
+        boolean incomeEntriesAvailable;
+        if(resultSet.next() == false){
+            incomeEntriesAvailable = false;
+        }
+        else{
+            incomeEntriesAvailable = true;
+        }
+        
+        resultSet = db.doQuery(checkQuery2, con);
+        boolean expenseEntriesAvailable;
+        if(resultSet.next() == false){
+            expenseEntriesAvailable = false;
+        }
+        else{
+            expenseEntriesAvailable = true;
+        }
+        
+        if(incomeEntriesAvailable && expenseEntriesAvailable){
+            resultSet = db.doQuery(iQuery, con);
+            resultSet.next();
+            String sumOfIncome = resultSet.getString("1");
+            resultSet.close();
+            resultSet = db.doQuery(eQuery, con);
+            resultSet.next();
+            String sumOfExpense = resultSet.getString("1");
+            resultSet.close();
+            double income = Double.parseDouble(sumOfIncome);
+            double expense = Double.parseDouble(sumOfExpense);
+            double total = (income - expense);
+            double roundOff = Math.round(total * 100.0) / 100.0;
+            String totalString = Double.toString(roundOff);
+            jTextField1.setText(totalString);
+            jTextField1.setEditable(false); 
+        }else{
+            jTextField1.setText("0");
+            jTextField1.setEditable(false);
+        }
         }catch(Exception e){
             
         }
@@ -70,6 +92,8 @@ public class UserView extends javax.swing.JFrame {
                 + "('"+java.time.LocalDate.now().getMonth().toString().toUpperCase()+"') AND YEARS = "+java.time.LocalDate.now().getYear()+"";
         String eQuery = "SELECT SUM(AMOUNT) FROM TRANSACTIONS WHERE USERNAME = ('"+Username+"') AND TYPE = ('Expense') AND MONTH = "
                 + "('"+java.time.LocalDate.now().getMonth().toString().toUpperCase()+"') AND YEARS = "+java.time.LocalDate.now().getYear()+"";
+        String checkQuery = "SELECT * FROM TRANSACTIONS WHERE USERNAME = ('"+Username+"') AND TYPE = ('Income')";
+        String checkQuery2 = "SELECT * FROM TRANSACTIONS WHERE USERNAME = ('"+Username+"') AND TYPE = ('Expense')";
         try {
             con = DriverManager.getConnection(DB_URL,DB_USER,DB_PASSWD);
         }
@@ -78,21 +102,44 @@ public class UserView extends javax.swing.JFrame {
         }
         
         try{
-        resultSet = db.doQuery(iQuery, con);
-        resultSet.next();
-        String sumOfIncome = resultSet.getString("1");
-        resultSet.close();
-        resultSet = db.doQuery(eQuery, con);
-        resultSet.next();
-        String sumOfExpense = resultSet.getString("1");
-        resultSet.close();
-        double income = Double.parseDouble(sumOfIncome);
-        double expense = Double.parseDouble(sumOfExpense);
-        double total = (income - expense);
-        double roundOff = Math.round(total * 100.0) / 100.0;
-        String totalString = Double.toString(roundOff);
-        jTextField4.setText(totalString);
-        jTextField4.setEditable(false);
+        resultSet = db.doQuery(checkQuery, con);
+        boolean incomeEntriesAvailable;
+        if(resultSet.next() == false){
+            incomeEntriesAvailable = false;
+        }
+        else{
+            incomeEntriesAvailable = true;
+        }
+        
+        resultSet = db.doQuery(checkQuery2, con);
+        boolean expenseEntriesAvailable;
+        if(resultSet.next() == false){
+            expenseEntriesAvailable = false;
+        }
+        else{
+            expenseEntriesAvailable = true;
+        }
+        
+        if(incomeEntriesAvailable && expenseEntriesAvailable){
+            resultSet = db.doQuery(iQuery, con);
+            resultSet.next();
+            String sumOfIncome = resultSet.getString("1");
+            resultSet.close();
+            resultSet = db.doQuery(eQuery, con);
+            resultSet.next();
+            String sumOfExpense = resultSet.getString("1");
+            resultSet.close();
+            double income = Double.parseDouble(sumOfIncome);
+            double expense = Double.parseDouble(sumOfExpense);
+            double total = (income - expense);
+            double roundOff = Math.round(total * 100.0) / 100.0;
+            String totalString = Double.toString(roundOff);
+            jTextField4.setText(totalString);
+            jTextField4.setEditable(false); 
+        }else{
+            jTextField4.setText("0");
+            jTextField4.setEditable(false);
+        }
         }catch(Exception e){
             
         }
@@ -104,24 +151,40 @@ public class UserView extends javax.swing.JFrame {
         Connection con = null;
         String query = "SELECT SUM(AMOUNT) FROM TRANSACTIONS WHERE USERNAME = ('"+Username+"') AND TYPE = ('Income') AND MONTH = "
                 + "('"+java.time.LocalDate.now().getMonth().toString().toUpperCase()+"') AND YEARS = "+java.time.LocalDate.now().getYear()+"";
+        String checkQuery = "SELECT * FROM TRANSACTIONS WHERE USERNAME = ('"+Username+"') AND TYPE = ('Income')";
         try {
             con = DriverManager.getConnection(DB_URL,DB_USER,DB_PASSWD);
         }
         catch (SQLException ex) {
             Logger.getLogger(LoginFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        resultSet = db.doQuery(query, con);
-        try{
-            resultSet.next();
-            String sumOfIncome = resultSet.getString("1");
-            double income = Double.parseDouble(sumOfIncome);         
-            double roundOff = Math.round(income * 100.0) / 100.0;
-            String totalString = Double.toString(roundOff); 
-            jTextField2.setText(totalString);
-            jTextField2.setEditable(false); 
+        resultSet = db.doQuery(checkQuery, con);
+        boolean entriesAvailable;
+        try {
+            if(resultSet.next() == false){
+                entriesAvailable = false;
+            }
+            else{
+                entriesAvailable = true;
+            }
+            
+            if(entriesAvailable){
+                resultSet = db.doQuery(query, con);
+                resultSet.next();
+                String sumOfIncome = resultSet.getString("1");
+                double income = Double.parseDouble(sumOfIncome);         
+                double roundOff = Math.round(income * 100.0) / 100.0;
+                String totalString = Double.toString(roundOff); 
+                jTextField2.setText(totalString);
+                jTextField2.setEditable(false);
+            }else{
+                jTextField2.setText("0");
+                jTextField2.setEditable(false);
+            }
+            
         } catch (SQLException ex) {
             Logger.getLogger(UserView.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
     }
     
     public void setMonthlyExpense(){
@@ -130,24 +193,40 @@ public class UserView extends javax.swing.JFrame {
         Connection con = null;
         String query = "SELECT SUM(AMOUNT) FROM TRANSACTIONS WHERE USERNAME = ('"+Username+"') AND TYPE = ('Expense') AND MONTH = "
                 + "('"+java.time.LocalDate.now().getMonth().toString().toUpperCase()+"') AND YEARS = "+java.time.LocalDate.now().getYear()+"";
+        String checkQuery = "SELECT * FROM TRANSACTIONS WHERE USERNAME = ('"+Username+"') AND TYPE = ('Expense')";
         try {
             con = DriverManager.getConnection(DB_URL,DB_USER,DB_PASSWD);
         }
         catch (SQLException ex) {
             Logger.getLogger(LoginFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        resultSet = db.doQuery(query, con);
-        try{
-            resultSet.next();
-            String sumOfExpense = resultSet.getString("1");
-            double expense = Double.parseDouble(sumOfExpense);         
-            double roundOff = Math.round(expense * 100.0) / 100.0;
-            String totalString = Double.toString(roundOff); 
-            jTextField3.setText(totalString);
-            jTextField3.setEditable(false); 
+        resultSet = db.doQuery(checkQuery, con);
+        boolean entriesAvailable;
+        try {
+            if(resultSet.next() == false){
+                entriesAvailable = false;
+            }
+            else{
+                entriesAvailable = true;
+            }
+            
+            if(entriesAvailable){
+                resultSet = db.doQuery(query, con);
+                resultSet.next();
+                String sumOfIncome = resultSet.getString("1");
+                double income = Double.parseDouble(sumOfIncome);         
+                double roundOff = Math.round(income * 100.0) / 100.0;
+                String totalString = Double.toString(roundOff); 
+                jTextField3.setText(totalString);
+                jTextField3.setEditable(false);
+            }else{
+                jTextField3.setText("0");
+                jTextField3.setEditable(false);
+            }
+            
         } catch (SQLException ex) {
             Logger.getLogger(UserView.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
     }
 
     /**
@@ -219,6 +298,7 @@ public class UserView extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButton2.setText("Add Income");
+        jButton2.setBorder(new javax.swing.border.MatteBorder(null));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -226,6 +306,7 @@ public class UserView extends javax.swing.JFrame {
         });
 
         jButton3.setText("Add Expense");
+        jButton3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -233,6 +314,7 @@ public class UserView extends javax.swing.JFrame {
         });
 
         jButton1.setText("View Transactions");
+        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -240,6 +322,7 @@ public class UserView extends javax.swing.JFrame {
         });
 
         jButton4.setText("Logout");
+        jButton4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
