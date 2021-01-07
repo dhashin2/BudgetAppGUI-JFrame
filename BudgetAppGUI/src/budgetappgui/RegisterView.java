@@ -84,7 +84,7 @@ public class RegisterView extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Login");
+        jButton2.setText("Go back");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -150,7 +150,12 @@ public class RegisterView extends javax.swing.JFrame {
         boolean userExists = false;
         for(int i=0; i<list.size(); i++){
             String s = list.get(i).getUsername();
-            if(s.equals(jTextField1.getText().toUpperCase().trim())){
+            if(jTextField1.getText().isEmpty() || jPasswordField1.getText().isEmpty()){
+                JOptionPane.showMessageDialog(null, "Please enter all fields");
+                userExists = true;
+                break;
+            }
+            else if(s.equals(jTextField1.getText().toUpperCase().trim())){
                 JOptionPane.showMessageDialog(null, "Username is already taken");
                 dispose();
                 userExists = true;
@@ -163,12 +168,11 @@ public class RegisterView extends javax.swing.JFrame {
             db.doQuery(query2, con);
             dispose();
             JOptionPane.showMessageDialog(null, "Successfully Registered"); 
+            LoginFrame loginFrame = new LoginFrame();
+            loginFrame.pack();
+            loginFrame.setLocationRelativeTo(null);
+            loginFrame.setVisible(true);
         }
-
-        LoginFrame loginFrame = new LoginFrame();
-        loginFrame.pack();
-        loginFrame.setLocationRelativeTo(null);
-        loginFrame.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed

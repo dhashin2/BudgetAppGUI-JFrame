@@ -47,7 +47,7 @@ public class ViewTransactions extends javax.swing.JFrame {
         jComboBox4.addItem("Income");
         jComboBox4.addItem("Expense");
         
-        for(int i = 2020; i < 2100; i++){
+        for(int i = 1980; i < 2100; i++){
             int x = i;
             x++;
             jComboBox3.addItem(String.valueOf(x));
