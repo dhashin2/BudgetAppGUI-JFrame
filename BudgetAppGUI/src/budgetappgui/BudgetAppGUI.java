@@ -30,8 +30,6 @@ public class BudgetAppGUI {
                 db.doQuery(query2, con);
             }
         LoginFrame login = new LoginFrame();
-        login.pack();
-        login.setLocationRelativeTo(null);
         login.setVisible(true);          
     }
 
