@@ -3,6 +3,7 @@ package budgetappgui;
 import static budgetappgui.BudgetAppGUI.DB_PASSWD;
 import static budgetappgui.BudgetAppGUI.DB_URL;
 import static budgetappgui.BudgetAppGUI.DB_USER;
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -19,6 +20,7 @@ public class RegisterView extends javax.swing.JFrame {
     public RegisterView() {
         initComponents();
         
+        getContentPane().setBackground(Color.LIGHT_GRAY);
         setTitle("weSave");
         setResizable(false);
         pack();
@@ -27,8 +29,6 @@ public class RegisterView extends javax.swing.JFrame {
 
     public ArrayList<User> userList(){
         ArrayList<User> userList = new ArrayList<>();
-        LoginFrame lg = new LoginFrame();
-        //String Username = lg.getUsername();
         
         Connection con = null;
         try {
@@ -185,8 +185,9 @@ public class RegisterView extends javax.swing.JFrame {
             }
             else if(s.equals(jTextField1.getText().toUpperCase().trim())){
                 JOptionPane.showMessageDialog(null, "Username is already taken");
-                dispose();
                 userExists = true;
+                jTextField1.setText(null);
+                jPasswordField1.setText(null);
                 break;    
             }
         }
