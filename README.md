@@ -1,4 +1,5 @@
-# BudgetAppGUI-JFrame
+# weSave
+# JFrame Budgeting Application
 Final year project for CS course
 
 Instructions on how to set up
